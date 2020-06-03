@@ -6,12 +6,15 @@ import com.autonomousapps.extension.Behavior
 import com.autonomousapps.TASK_GROUP_DEP
 import com.autonomousapps.advice.ComponentWithTransitives
 import com.autonomousapps.advice.Dependency
+import com.autonomousapps.extension.LogicalDependenciesHandler
 import com.autonomousapps.internal.*
 import com.autonomousapps.internal.advice.Advisor
 import com.autonomousapps.internal.advice.filter.*
 import com.autonomousapps.internal.utils.*
 import org.gradle.api.DefaultTask
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.*
@@ -76,6 +79,15 @@ abstract class AdviceTask : DefaultTask() {
 
   @get:Input
   abstract val facadeGroups: SetProperty<String>
+
+  @get:Nested
+  lateinit var logicalDependenciesHandler: LogicalDependenciesHandler
+
+  private fun getLogicalDependencyGroups(): Map<String, Set<Regex>> {
+    return logicalDependenciesHandler.groups.asMap.map { (name, groups) ->
+      name to groups.includes.get()
+    }.toMap()
+  }
 
   @get:Input
   abstract val ignoreKtx: Property<Boolean>
@@ -171,6 +183,7 @@ abstract class AdviceTask : DefaultTask() {
       unusedProcs = unusedProcs,
       serviceLoaders = serviceLoaders.fromJsonSet(),
       facadeGroups = facadeGroups.get(),
+      logicalDependencies = getLogicalDependencyGroups(),
       ignoreKtx = ignoreKtx.get()
     )
 

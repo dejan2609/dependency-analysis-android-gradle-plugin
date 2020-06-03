@@ -38,6 +38,7 @@ internal class Advisor(
   private val unusedProcs: Set<AnnotationProcessor>,
   private val serviceLoaders: Set<ServiceLoader>,
   private val facadeGroups: Set<String>,
+  private val logicalDependencies: Map<String, Set<Regex>>,
   private val ignoreKtx: Boolean = false
 ) {
 

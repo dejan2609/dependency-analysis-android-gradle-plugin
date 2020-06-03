@@ -4,6 +4,7 @@ package com.autonomousapps
 
 import com.autonomousapps.extension.AbiHandler
 import com.autonomousapps.extension.IssueHandler
+import com.autonomousapps.extension.LogicalDependenciesHandler
 import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.MapProperty
@@ -28,9 +29,9 @@ open class DependencyAnalysisExtension(objects: ObjectFactory) : AbstractExtensi
     it.convention(true)
   }
 
-  override val issueHandler: IssueHandler = objects.newInstance(IssueHandler::class)
-
-  internal val abiHandler: AbiHandler = objects.newInstance(AbiHandler::class)
+  override val issueHandler = objects.newInstance(IssueHandler::class)
+  internal val abiHandler = objects.newInstance(AbiHandler::class)
+  internal val logicalDependenciesHandler = objects.newInstance(LogicalDependenciesHandler::class)
 
   @Deprecated("This is now a no-op; you should stop using it. It will be removed in v1.0.0")
   fun setVariants(vararg v: String) {
@@ -67,6 +68,10 @@ open class DependencyAnalysisExtension(objects: ObjectFactory) : AbstractExtensi
    */
   fun setFacadeGroups(vararg facadeGroups: String) {
     setFacadeGroups(facadeGroups.toSet())
+  }
+
+  fun logicalDependencies(action: Action<LogicalDependenciesHandler>) {
+    action.execute(logicalDependenciesHandler)
   }
 
   /**

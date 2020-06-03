@@ -1,9 +1,9 @@
 package com.autonomousapps.advice
 
 /**
- * Represents a dependency ([Dependency.identifier]) that is declared in the `dependencies {}` block
- * of a build script. This dependency may or may not be used, and has zero or more transitive
- * dependencies that _are_ used ([usedTransitiveDependencies]).
+ * Represents a dependency that is declared in the `dependencies {}` block of a build script. This
+ * dependency may or may not be used, and has zero or more transitive dependencies that _are_ used
+ * ([usedTransitiveDependencies]).
  */
 data class ComponentWithTransitives(
   /**
